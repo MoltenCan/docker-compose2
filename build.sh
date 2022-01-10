@@ -8,6 +8,10 @@ VER="2.2.3"
     rm compose.tar.gz
 }
 
+cd compose
+go mod tidy && go mod vendor
+cd ..
+
 # echo "logging in"
 # docker login --username=moltencan
 
@@ -17,8 +21,10 @@ docker buildx create --use
 echo "building for dockerhub"
 docker buildx build \
     --push \
-    --platform "linux/arm/v7,linux/arm/v6,linux/amd64,darwin/arm64" \
-    --tag moltencan/docker-compose2:${VER} .
+    --platform "linux/arm/v7,linux/arm/v6,linux/amd64,linux/arm64/v8" \
+    --tag moltencan/docker-compose2:${VER} \
+    --tag moltencan/docker-compose2:latest \
+    .
 
 echo "deleting builder"
 docker buildx rm
